@@ -51,8 +51,8 @@ public class JsonUtils {
                 {
                     sandwichObj.setImage(sandwichJSONObj.getString(kJsonImageTag));
                 }
-                if (nameJSONObj.has(kJsonIngredientsTag)) {
-                    JSONArray ingredientsJSONArray = nameJSONObj.getJSONArray(kJsonIngredientsTag);
+                if (sandwichJSONObj.has(kJsonIngredientsTag)) {
+                    JSONArray ingredientsJSONArray = sandwichJSONObj.getJSONArray(kJsonIngredientsTag);
                     ArrayList<String> ingredientsList =  new ArrayList<>();
                     for (int i = 0 ; i < ingredientsJSONArray.length() ; i++) {
                         ingredientsList.add(ingredientsJSONArray.getString(i));
