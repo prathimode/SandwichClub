@@ -76,17 +76,25 @@ public class DetailActivity extends AppCompatActivity {
 
     private void populateUI() {
 
-        if (mSandwich.getPlaceOfOrigin() != null)
+        if (!TextUtils.isEmpty(mSandwich.getPlaceOfOrigin()))
             mOriginTv.setText(mSandwich.getPlaceOfOrigin());
+        else
+            mOriginTv.setText(R.string.not_Available);
 
-        if (mSandwich.getDescription() != null)
+        if (!TextUtils.isEmpty(mSandwich.getDescription()))
             mDescriptionTv.setText(mSandwich.getDescription());
+        else
+            mDescriptionTv.setText(R.string.not_Available);
 
-        if (mSandwich.getAlsoKnownAs() != null)
+        if (mSandwich.getAlsoKnownAs() != null && mSandwich.getAlsoKnownAs().size() != 0)
             mKnownAsTv.setText(TextUtils.join(", ",mSandwich.getAlsoKnownAs()));
+        else
+            mKnownAsTv.setText(R.string.not_Available);
 
-        if (mSandwich.getIngredients() != null)
+        if (mSandwich.getIngredients() != null && mSandwich.getIngredients().size() != 0)
             mIngredientTv.setText(TextUtils.join(", ",mSandwich.getIngredients()));
+        else
+            mIngredientTv.setText(R.string.not_Available);
 
     }
 }

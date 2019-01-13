@@ -10,7 +10,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 public class JsonUtils {
 
@@ -22,6 +21,7 @@ public class JsonUtils {
     private final static String kJsonDescriptionTag = "description";
     private final static String kJsonImageTag = "image";
     private final static String kJsonIngredientsTag = "ingredients";
+    private final static String kfallbackString = "Invalid Data";
 
     public static Sandwich parseSandwichJson(String json) {
         Sandwich sandwichObj = null;
@@ -30,34 +30,39 @@ public class JsonUtils {
                 sandwichObj = new Sandwich();
                 JSONObject sandwichJSONObj = new JSONObject(json);
 
-                JSONObject nameJSONObj = sandwichJSONObj.getJSONObject(kJsonNameTag);
-                sandwichObj.setMainName(nameJSONObj.getString(kJsonMainNameTag));
+                JSONObject nameJSONObj = sandwichJSONObj.optJSONObject(kJsonNameTag);
+                if(nameJSONObj != null) {
+                    sandwichObj.setMainName(nameJSONObj.optString(kJsonMainNameTag, kfallbackString));
 
-                if (nameJSONObj.has(kJsonAlsoKnownAsTag)) {
-                    JSONArray knownAsJSONArray = nameJSONObj.getJSONArray(kJsonAlsoKnownAsTag);
-                    ArrayList<String> knowAsList =  new ArrayList<>();
-                    for (int i = 0 ; i < knownAsJSONArray.length() ; i++) {
-                        knowAsList.add(knownAsJSONArray.getString(i));
+                    if (nameJSONObj.has(kJsonAlsoKnownAsTag)) {
+                        JSONArray knownAsJSONArray = nameJSONObj.optJSONArray(kJsonAlsoKnownAsTag);
+                        if(knownAsJSONArray != null) {
+                            ArrayList<String> knowAsList = new ArrayList<>();
+                            for (int i = 0; i < knownAsJSONArray.length(); i++) {
+                                knowAsList.add(knownAsJSONArray.optString(i,kfallbackString));
+                            }
+                            sandwichObj.setAlsoKnownAs(knowAsList);
+                        }
                     }
-                    sandwichObj.setAlsoKnownAs(knowAsList);
-                }
-                if(sandwichJSONObj.has(kJsonPlaceOfOriginTag)) {
-                    sandwichObj.setPlaceOfOrigin(sandwichJSONObj.getString(kJsonPlaceOfOriginTag));
-                }
-                if(sandwichJSONObj.has(kJsonDescriptionTag)) {
-                    sandwichObj.setDescription(sandwichJSONObj.getString(kJsonDescriptionTag));
-                }
-                if(sandwichJSONObj.has(kJsonImageTag))
-                {
-                    sandwichObj.setImage(sandwichJSONObj.getString(kJsonImageTag));
-                }
-                if (sandwichJSONObj.has(kJsonIngredientsTag)) {
-                    JSONArray ingredientsJSONArray = sandwichJSONObj.getJSONArray(kJsonIngredientsTag);
-                    ArrayList<String> ingredientsList =  new ArrayList<>();
-                    for (int i = 0 ; i < ingredientsJSONArray.length() ; i++) {
-                        ingredientsList.add(ingredientsJSONArray.getString(i));
+                    if (sandwichJSONObj.has(kJsonPlaceOfOriginTag)) {
+                        sandwichObj.setPlaceOfOrigin(sandwichJSONObj.getString(kJsonPlaceOfOriginTag));
                     }
-                    sandwichObj.setIngredients(ingredientsList);
+                    if (sandwichJSONObj.has(kJsonDescriptionTag)) {
+                        sandwichObj.setDescription(sandwichJSONObj.getString(kJsonDescriptionTag));
+                    }
+                    if (sandwichJSONObj.has(kJsonImageTag)) {
+                        sandwichObj.setImage(sandwichJSONObj.getString(kJsonImageTag));
+                    }
+                    if (sandwichJSONObj.has(kJsonIngredientsTag)) {
+                        JSONArray ingredientsJSONArray = sandwichJSONObj.optJSONArray(kJsonIngredientsTag);
+                        if(ingredientsJSONArray != null) {
+                            ArrayList<String> ingredientsList = new ArrayList<>();
+                            for (int i = 0; i < ingredientsJSONArray.length(); i++) {
+                                ingredientsList.add(ingredientsJSONArray.optString(i, kfallbackString));
+                            }
+                            sandwichObj.setIngredients(ingredientsList);
+                        }
+                    }
                 }
 
             } catch (JSONException e) {
